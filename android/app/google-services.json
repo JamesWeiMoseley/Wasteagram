@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "187476966554",
+    "project_id": "bandnames-bc643",
+    "storage_bucket": "bandnames-bc643.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187476966554:android:b99564eb9cf0d930b5f323",
+        "android_client_info": {
+          "package_name": "edu.oregonstate.moseleyj.wasteagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187476966554-9q1dtga0as49uuj22qo5scb85n0grocl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYm4koOfIEuQynMU5b1ST6AuqEyYVZLoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187476966554-9q1dtga0as49uuj22qo5scb85n0grocl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
