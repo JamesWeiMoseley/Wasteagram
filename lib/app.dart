@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wasteagram/screens/entry_lists.dart';
-import 'package:wasteagram/screens/new_post.dart';
-import 'package:wasteagram/themeData.dart';
+import 'package:wasteagram/themes/themeData.dart';
 
 class App extends StatelessWidget {
   final String title;
@@ -12,9 +11,8 @@ class App extends StatelessWidget {
     return MaterialApp(
         title: this.title,
         theme: AppTheme().buildThemeData(),
-        // home: Scaffold(body: NewPosts()),
         home: Scaffold(
-          body: EntryLists(),
+          body: EntryLists(title: this.title),
         ));
   }
 }

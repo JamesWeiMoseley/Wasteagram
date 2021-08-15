@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
-import '../models/post.dart';
+import '../models/food_waste_post.dart';
 
 class NewPosts extends StatefulWidget {
-  const NewPosts({Key? key}) : super(key: key);
+  final String url;
+  const NewPosts({Key? key, required this.url}) : super(key: key);
 
   @override
   _NewPostsState createState() => _NewPostsState();
@@ -13,13 +14,9 @@ class NewPosts extends StatefulWidget {
 
 class _NewPostsState extends State<NewPosts> {
   late LocationData locationData = Location() as LocationData;
-  Post post = Post(
-      imageURL: '',
-      latitude: 0.0,
-      longitude: 0.0,
-      num: 0,
-      time: DateTime.now());
+  Post post = Post();
   final _formKey = GlobalKey<FormState>();
+  late Image theImage;
 
   @override
   void initState() {
@@ -27,18 +24,18 @@ class _NewPostsState extends State<NewPosts> {
     retrieveLocation();
   }
 
+  //get the latitude and longidue using location
   void retrieveLocation() async {
     var locationService = Location();
     locationData = await locationService.getLocation();
     if (mounted) setState(() {});
-    print(locationData.longitude);
-    print(locationData.latitude);
   }
 
+  //sends info to firebase
   void sendToDatabase() {
     FirebaseFirestore.instance.collection('posts').add({
-      'num': post.num,
-      'time': post.time,
+      'quantity': post.quantity,
+      'date': post.date,
       'latitude': post.latitude,
       'longitude': post.longitude,
       'imageURL': post.imageURL
@@ -57,57 +54,53 @@ class _NewPostsState extends State<NewPosts> {
             key: _formKey,
             child: Column(
               children: [
+                Image.network(this.widget.url, fit: BoxFit.cover),
                 Semantics(
                   textField: true,
-                  label: 'input number of wastes',
+                  label: 'number of wastes',
                   child: TextFormField(
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     keyboardType: TextInputType.number,
                     decoration:
                         InputDecoration(labelText: 'Number of Wasted Items'),
                     onSaved: (value) {
-                      post.num = int.tryParse(value!)!;
-                      print('the value is ${post.num}');
-                      // print(int.tryParse(value) == int);
+                      post.quantity = int.tryParse(value!)!;
+                      print('the value is ${post.quantity}');
                     },
+                    //validator for this form
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'you stpid';
+                        return 'Its Empty';
                       }
-                      return 'it is not empty';
+                      return null;
                     },
                   ),
                 )
               ],
             )),
       ),
+      //Bottom app bar is the button with the cloud upload icon in it
       bottomNavigationBar: BottomAppBar(
           child: Container(
         child: Semantics(
           button: true,
           onTapHint: 'upload your file',
           label: 'upload',
-          // height: MediaQuery.of(context).size.height * .1,
           child: ElevatedButton(
             onPressed: () async {
-              // if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              // FirebaseFirestore.instance.collection('posts').add({
-              //   'imageURL': 'hello',
-              //   'num': 4,
-              //   'time': DateTime.now(),
-              //   'longitude': locationData?.longitude,
-              //   'latitude': locationData?.latitude
-              // }).then((value) => print('all done'));
-              // post.num = 12;
-              post.time = DateTime.now();
-              post.imageURL = 'hello';
-              post.longitude = locationData.longitude!;
-              post.latitude = locationData.latitude!;
+              //validator will display snackbar is something is wrong
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
 
-              sendToDatabase();
-              // } else
-              //   print("somethingis wrong");
+                post.date = DateTime.now();
+                post.imageURL = this.widget.url;
+                post.longitude = locationData.longitude!;
+                post.latitude = locationData.latitude!;
+
+                sendToDatabase();
+              } else
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("you messed up")));
               Navigator.of(context).pop();
             },
             child: Icon(Icons.cloud_upload,

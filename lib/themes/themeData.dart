@@ -8,11 +8,6 @@ class AppTheme {
         accentColor: Colors.yellow, //button
 
         textTheme: TextTheme(
-          headline1: TextStyle(
-              fontSize: 72.0,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Cutive',
-              color: Colors.red),
           subtitle1: TextStyle(
               fontSize: 24.0,
               color: Colors.green[400],
